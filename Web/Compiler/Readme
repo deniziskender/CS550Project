@@ -1,0 +1,24 @@
+This is a syntax-directed compiler from C to VerySimpleCPU. It is written as a clang frontend action. The produced output is VerySimpleCPU assembly code in ASCII format.
+
+Key limitations:
+
+• No structs.
+• Supported types are:
+   – int (32-bit), float (32-bit).
+   – Pointer to a supported type (e.g. int*, float**).
+   – One dimensional array of a supported type (e.g. int[]).
+• No standard library. So functions like malloc and free do not exist. All the data is
+statically allocated or in the stack – there is no heap allocation.
+• No switch.
+• The code generated for division and remainder operations are very slow.
+The following features are supported:
+• Pointer arithmetic.
+• Array operations.
+• Functions with void and non-void return types.
+• Direct or indirect recursion.
+• Const and non-const global variables.
+• For-loops and while-loops with break and continue.
+
+Usage -> Write your code into the specified section(Simple C code is already provided). Then, click to "Convert From C To Assembly" button. The result will be a file called "compilertemp.asm" which includes VerySimpleCPU assembly code in ASCII format. This output later can be used for simulator directly.
+
+
