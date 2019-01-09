@@ -9,9 +9,12 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
 
 import org.apache.commons.io.FileUtils;
+import org.hibernate.Session;
 
 import com.compiler.constants.Info.ErrorMessage;
+import com.compiler.serviceutil.TokenService;
 import com.compiler.util.FileUtil;
+import com.compiler.util.HibernateUtil;
 
 @Path("/wcet")
 public class WCETService {
@@ -23,17 +26,22 @@ public class WCETService {
 
 	@POST
 	@Path("/getWCETAnalysis/")
-	public Response getAssemblyFromCV1(@FormParam("cCode") String cCode) {
-		ResponseBuilder response = null;
-		try {
-			File testAsm = new File(FileUtil.SERVER_UPLOAD_LOCATION_FOLDER + INPUT_FILE);
-			FileUtils.writeStringToFile(testAsm, cCode);
-			Process proc = Runtime.getRuntime().exec(SCRIPT_V1);
-			proc.waitFor();
-			response = FileUtil.getOutput(proc, OUTPUT_FILE);
-		} catch (Exception ex) {
-			response = Response.ok((Object) ErrorMessage.NOT_OK.getMessage());
+	public Response getAssemblyFromCV1(@FormParam("cCode") String cCode, @FormParam("token") String token) {
+		Session session = HibernateUtil.getSessionFactory().openSession();
+		if (TokenService.isAccessTokenValid(session, token)) {
+			ResponseBuilder response = null;
+			try {
+				File testAsm = new File(FileUtil.SERVER_UPLOAD_LOCATION_FOLDER + INPUT_FILE);
+				FileUtils.writeStringToFile(testAsm, cCode);
+				Process proc = Runtime.getRuntime().exec(SCRIPT_V1);
+				proc.waitFor();
+				response = FileUtil.getOutput(proc, OUTPUT_FILE);
+			} catch (Exception ex) {
+				response = Response.ok((Object) ErrorMessage.NOT_OK.getMessage());
+			}
+			return response.build();			
+		} else {
+			return Response.ok((Object) ErrorMessage.ACCESS_TOKEN_EXPIRED.getMessage()).build();
 		}
-		return response.build();
 	}
 }

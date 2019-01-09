@@ -14,9 +14,12 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
 
 import org.apache.commons.io.FileUtils;
+import org.hibernate.Session;
 
 import com.compiler.constants.Info.ErrorMessage;
+import com.compiler.serviceutil.TokenService;
 import com.compiler.util.FileUtil;
+import com.compiler.util.HibernateUtil;
 
 @Path("/preprocessors")
 public class PreprocessorService {
@@ -25,49 +28,54 @@ public class PreprocessorService {
 
 	@POST
 	@Path("/getXmlFromC/")
-	public Response getAssemblyFromC(@FormParam("cCode") String cCode) {
-		ResponseBuilder response = null;
-		try {
-			File testCFile = new File(FileUtil.SERVER_UPLOAD_LOCATION_FOLDER + INPUT_FILE);
-			FileUtils.writeStringToFile(testCFile, cCode);
-			Scanner scanner = new Scanner(testCFile);
-			File output = new File(FileUtil.SERVER_UPLOAD_LOCATION_FOLDER + OUTPUT_FILE);
-			FileOutputStream is = new FileOutputStream(output);
-			OutputStreamWriter osw = new OutputStreamWriter(is);
-			Writer w = new BufferedWriter(osw);
-			w.write(XML_VERSION_TAG + NEW_LINE);
-			w.write(SYSTEM_START_TAG + NEW_LINE);
-			int counter = 0;
-			while (scanner.hasNext()) {
-				String nextLine = scanner.nextLine();
-				String[] strs = nextLine.split("\\s+");
-				if (nextLine.startsWith(DEFINE_PREFIX)) {
-					String value = strs[strs.length - 1];
-					counter++;
-					if (counter == 1) {
-						w.write(TAB + PERIPHERAL_START_TAG + ONE_SPACE + NAME + value + ONE_SPACE);
-					} else if (counter == 2) {
-						w.write(TYPE + value + END_TAG + NEW_LINE);
-					} else if (counter == 3) {
-						w.write(FOUR_SPACE + MEM_ADDR_LOW_START_TAG + value + MEM_ADDR_LOW_END_TAG + NEW_LINE);
-					} else if (counter == 4) {
-						w.write(FOUR_SPACE + MEM_START_HIGH_START_TAG + value + MEM_START_HIGH_END_TAG + NEW_LINE);
-						w.write(TAB + PERIPHERAL_END_TAG + NEW_LINE);
-					}
-					if (counter == PERIPHERAL_PROPERTY_LENGTH) {
-						counter = 0;
+	public Response getAssemblyFromC(@FormParam("cCode") String cCode, @FormParam("token") String token) {
+		Session session = HibernateUtil.getSessionFactory().openSession();
+		if (TokenService.isAccessTokenValid(session, token)) {
+			ResponseBuilder response = null;
+			try {
+				File testCFile = new File(FileUtil.SERVER_UPLOAD_LOCATION_FOLDER + INPUT_FILE);
+				FileUtils.writeStringToFile(testCFile, cCode);
+				Scanner scanner = new Scanner(testCFile);
+				File output = new File(FileUtil.SERVER_UPLOAD_LOCATION_FOLDER + OUTPUT_FILE);
+				FileOutputStream is = new FileOutputStream(output);
+				OutputStreamWriter osw = new OutputStreamWriter(is);
+				Writer w = new BufferedWriter(osw);
+				w.write(XML_VERSION_TAG + NEW_LINE);
+				w.write(SYSTEM_START_TAG + NEW_LINE);
+				int counter = 0;
+				while (scanner.hasNext()) {
+					String nextLine = scanner.nextLine();
+					String[] strs = nextLine.split("\\s+");
+					if (nextLine.startsWith(DEFINE_PREFIX)) {
+						String value = strs[strs.length - 1];
+						counter++;
+						if (counter == 1) {
+							w.write(TAB + PERIPHERAL_START_TAG + ONE_SPACE + NAME + value + ONE_SPACE);
+						} else if (counter == 2) {
+							w.write(TYPE + value + END_TAG + NEW_LINE);
+						} else if (counter == 3) {
+							w.write(FOUR_SPACE + MEM_ADDR_LOW_START_TAG + value + MEM_ADDR_LOW_END_TAG + NEW_LINE);
+						} else if (counter == 4) {
+							w.write(FOUR_SPACE + MEM_START_HIGH_START_TAG + value + MEM_START_HIGH_END_TAG + NEW_LINE);
+							w.write(TAB + PERIPHERAL_END_TAG + NEW_LINE);
+						}
+						if (counter == PERIPHERAL_PROPERTY_LENGTH) {
+							counter = 0;
+						}
 					}
 				}
+				w.write(SYSTEM_END_TAG);
+				w.close();
+				scanner.close();
+				response = Response.ok((Object) output);
+				response.header("Content-Disposition", "attachment; filename=\"" + OUTPUT_FILE + "\"");
+			} catch (Exception ex) {
+				response = Response.ok((Object) ErrorMessage.NOT_OK.getMessage());
 			}
-			w.write(SYSTEM_END_TAG);
-			w.close();
-			scanner.close();
-			response = Response.ok((Object) output);
-			response.header("Content-Disposition", "attachment; filename=\"" + OUTPUT_FILE + "\"");
-		} catch (Exception ex) {
-			response = Response.ok((Object) ErrorMessage.NOT_OK.getMessage());
+			return response.build();
+		} else {
+			return Response.ok((Object) ErrorMessage.ACCESS_TOKEN_EXPIRED.getMessage()).build();
 		}
-		return response.build();
 	}
 
 	private static final String ONE_SPACE = " ";

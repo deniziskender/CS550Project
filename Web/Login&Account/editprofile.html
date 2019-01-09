@@ -1,0 +1,53 @@
+<html>
+<body>
+<head>
+<title>Profile</title>
+</head>
+<h1>Profile</h1>
+
+<script>
+function validateForm() {
+    var x = document.forms["data"]["name"].value;
+    if (x == "") {
+        alert("Name must be filled out");
+        return false;
+    }
+    var x = document.forms["data"]["surname"].value;
+    if (x == "") {
+        alert("Surname must be filled out");
+        return false;
+    }
+    x = document.forms["data"]["mail"].value;
+    if (x == "") {
+        alert("E-mail must be filled out");
+        return false;
+    }
+    x = document.forms["data"]["password"].value;
+    if (x == "") {
+        alert("Password must be filled out");
+        return false;
+    }
+}
+</script>
+<form name="data" action="http://167.99.209.254:8080/Uni/rest/users/editProfile" onsubmit="return validateForm()" method="post"
+<p>Name : <input type="text" name="name" /></p>
+<p>Surname : <input type="text" name="surname" /></p>
+<p>University e-mail : <input type="text" name="mail" /></p>
+<p>Password : <input type="text" name="password" /></p>
+<p>Bio : <input type="text" name="bio" /></p>
+<p>Phone Number : <input type="text" name="phoneNumber" /></p>
+<p>Instagram Link : <input type="text" name="instagramLink" /></p>
+<p>Twitter Link : <input type="text" name="twitterLink" /></p>
+<p>Linkedin Link : <input type="text" name="linkedinLink" /></p>
+<p>Token : <input type="text" name="token" /></p>
+<input type="submit" value="Edit Profile" />
+</form>
+
+<br></br>
+<a href="events.html"><button>Events</button></a> 
+<a href="social.html"><button>Social</button></a> 
+<a href="chat.html"><button>Chat</button></a> 
+<a href="profile.html"><button>Profile</button></a> 
+
+</body>
+</html>

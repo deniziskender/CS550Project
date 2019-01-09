@@ -2,10 +2,10 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.mkyong.common</groupId>
-	<artifactId>CompilerInCloud</artifactId>
+	<artifactId>CS550</artifactId>
 	<packaging>war</packaging>
 	<version>1.0-SNAPSHOT</version>
-	<name>CompilerInCloud Maven Webapp</name>
+	<name>CS550 Maven Webapp</name>
 	<url>http://maven.apache.org</url>
 
 	<repositories>
