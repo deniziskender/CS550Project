@@ -6,7 +6,8 @@ public class Info {
 		// @formatter:off
 		LOGOUT("Succesfully logged out."),
 		PROFILE_VALIDATED("Your profile succesfully validated."),
-		PROFILE_SUSPENSION("Your profile succesfully suspended.");
+		PROFILE_SUSPENSION("Your profile succesfully suspended."),
+		ALREADY_COMPILED_THIS_CODE("Already compiled this code, check your profile.");
 
 		// @formatter:on
 

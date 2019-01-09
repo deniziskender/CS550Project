@@ -15,8 +15,12 @@
 
 		<!-- Names the annotated entity class -->
 		<mapping class="com.compiler.model.AccessToken"></mapping>
+		<mapping class="com.compiler.model.ActivationToken"></mapping>
+		<mapping class="com.compiler.model.Compilation"></mapping>
+		<mapping class="com.compiler.model.RefreshToken"></mapping>
 		<mapping class="com.compiler.model.User"></mapping>
-
+		<mapping class="com.compiler.model.UserEdition"></mapping>
+		<mapping class="com.compiler.model.UserSuspension"></mapping>
 	</session-factory>
 
 </hibernate-configuration>

@@ -22,11 +22,7 @@ public class User implements Serializable {
 	private String password;
 	private String bio;
 	private String phoneNumber;
-	private String instagramLink;
-	private String twitterLink;
-	private String linkedinLink;
 	private int isSuspended;
-	private int isValidated;
 	private Date createDate;
 
 	@Id
@@ -93,33 +89,6 @@ public class User implements Serializable {
 		this.phoneNumber = phoneNumber;
 	}
 
-	@Column(name = "Instagram_Link")
-	public String getInstagramLink() {
-		return instagramLink;
-	}
-
-	public void setInstagramLink(String instagramLink) {
-		this.instagramLink = instagramLink;
-	}
-
-	@Column(name = "Twitter_Link")
-	public String getTwitterLink() {
-		return twitterLink;
-	}
-
-	public void setTwitterLink(String twitterLink) {
-		this.twitterLink = twitterLink;
-	}
-
-	@Column(name = "Linkedin_Link")
-	public String getLinkedinLink() {
-		return linkedinLink;
-	}
-
-	public void setLinkedinLink(String linkedinLink) {
-		this.linkedinLink = linkedinLink;
-	}
-
 	@Column(name = "Is_Suspended")
 	public int getIsSuspended() {
 		return isSuspended;
@@ -127,15 +96,6 @@ public class User implements Serializable {
 
 	public void setIsSuspended(int isSuspended) {
 		this.isSuspended = isSuspended;
-	}
-
-	@Column(name = "Is_Validated")
-	public int getIsValidated() {
-		return isValidated;
-	}
-
-	public void setIsValidated(int isValidated) {
-		this.isValidated = isValidated;
 	}
 
 	@Column(name = "Create_Date")

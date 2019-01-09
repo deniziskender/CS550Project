@@ -22,9 +22,6 @@ public class Mapper {
 		dto.setPhoneNumber(model.getPhoneNumber());
 		dto.setBio(model.getBio());
 		dto.setMail(model.getMail());
-		dto.setTwitterLink(model.getTwitterLink());
-		dto.setInstagramLink(model.getInstagramLink());
-		dto.setLinkedinLink(model.getLinkedinLink());
 		return dto;
 	}
 }

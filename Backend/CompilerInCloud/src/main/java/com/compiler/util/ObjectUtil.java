@@ -3,6 +3,7 @@ package com.compiler.util;
 import com.compiler.constants.Constants;
 import com.compiler.model.AccessToken;
 import com.compiler.model.ActivationToken;
+import com.compiler.model.Compilation;
 import com.compiler.model.RefreshToken;
 import com.compiler.model.User;
 import com.compiler.model.UserEdition;
@@ -15,7 +16,6 @@ public class ObjectUtil {
 		user.setSurname(surname);
 		user.setMail(mail);
 		user.setPassword(password);
-		user.setIsValidated(Constants.ZERO);
 		user.setCreateDate(DateUtil.getCurrentDate());
 		return user;
 	}
@@ -52,11 +52,19 @@ public class ObjectUtil {
 		userSuspension.setSuspendDate(DateUtil.getCurrentDate());
 		return userSuspension;
 	}
-	
+
 	public static UserEdition createUserEdition(int userId) {
 		UserEdition userEdition = new UserEdition();
 		userEdition.setUserId(userId);
 		userEdition.setEditDate(DateUtil.getCurrentDate());
 		return userEdition;
+	}
+
+	public static Compilation createCompilation(String key, String value, int userId) {
+		Compilation model = new Compilation();
+		model.setEncryptedCCode(key);
+		model.setFileName(value);
+		model.setUserId(userId);
+		return model;
 	}
 }

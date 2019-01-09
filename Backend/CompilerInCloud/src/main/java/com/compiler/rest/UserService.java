@@ -31,7 +31,7 @@ import com.compiler.util.HibernateUtil;
 import com.compiler.util.Mapper;
 import com.compiler.util.ObjectUtil;
 import com.compiler.util.ParameterValidationUtil;
-import com.compiler.util.PasswordEncrypterUtil;
+import com.compiler.util.EncrypterUtil;
 import com.compiler.util.RandomTokenGen;
 import com.google.gson.Gson;
 
@@ -126,7 +126,7 @@ public class UserService {
 		Session session = null;
 		try {
 			session = HibernateUtil.getSessionFactory().openSession();
-			String encryptedPassword = PasswordEncrypterUtil.encryptPassword(password);
+			String encryptedPassword = EncrypterUtil.encrypt(password);
 			Query query = session.createQuery(GetQueries.getUserByMailAndPassword);
 			query.setParameter("mail", mail);
 			query.setParameter("password", encryptedPassword);
@@ -224,7 +224,7 @@ public class UserService {
 			session = HibernateUtil.getSessionFactory().openSession();
 			if (TokenService.isAccessTokenValid(session, token)) {
 				session = HibernateUtil.getSessionFactory().openSession();
-				String encryptedPassword = PasswordEncrypterUtil.encryptPassword(password);
+				String encryptedPassword = EncrypterUtil.encrypt(password);
 				Query query = session.createQuery(UpdateQueries.editUser);
 				query.setParameter("name", name);
 				query.setParameter("surname", surname);
@@ -289,7 +289,7 @@ public class UserService {
 			if (!CollectionUtils.isEmpty(userList)) {
 				return new Gson().toJson(ErrorMessage.MAIL_ALREADY_EXIST.getMessage());
 			}
-			String encryptedPassword = PasswordEncrypterUtil.encryptPassword(password);
+			String encryptedPassword = EncrypterUtil.encrypt(password);
 			HibernateUtil.insertUser(session, ObjectUtil.createUser(name, surname, mail, encryptedPassword));
 
 			query = session.createQuery(GetQueries.getUserByMail);

@@ -8,6 +8,7 @@ import org.hibernate.cfg.beanvalidation.GroupsPerOperation.Operation;
 import com.compiler.dao.BaseDAO;
 import com.compiler.model.AccessToken;
 import com.compiler.model.ActivationToken;
+import com.compiler.model.Compilation;
 import com.compiler.model.RefreshToken;
 import com.compiler.model.User;
 import com.compiler.model.UserEdition;
@@ -60,5 +61,9 @@ public class HibernateUtil {
 	public static void insertUserEdition(Session session, UserEdition model) {
 		baseDAO.execute(session, model, Operation.INSERT);
 	}	
+
+	public static void insertCompilation(Session session, Compilation model) {
+		baseDAO.execute(session, model, Operation.INSERT);
+	}
 
 }

@@ -37,6 +37,7 @@ public class WCETService {
 				proc.waitFor();
 				response = FileUtil.getOutput(proc, OUTPUT_FILE);
 			} catch (Exception ex) {
+				System.out.println(ex.getMessage());
 				response = Response.ok((Object) ErrorMessage.NOT_OK.getMessage());
 			}
 			return response.build();			

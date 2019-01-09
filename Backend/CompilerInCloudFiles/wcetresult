@@ -1,7 +1,0 @@
-------------------WCET INFO------------------
-Instruction ADD -> 7 times.
-Instruction ADDi -> 4 times.
-Instruction CP -> 1 times.
-Instruction CPI -> 6 times.
-Instruction CPIr -> 4 times.
-Instruction JMP -> 3 times.

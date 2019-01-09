@@ -11,4 +11,9 @@ public class GetQueries {
 	public static final String getRefreshTokenByText = "from RefreshToken WHERE text = :text";
 	public static final String getActivationTokenByText = "from ActivationToken WHERE text = :text";
 
+	// compilations
+	public static final String getCompilationByKey = "from Compilation WHERE encryptedCCode = :encryptedCCode";
+	public static final String getMaxFileIdFromCompilations = "select max(id) from Compilation";
+
+
 }

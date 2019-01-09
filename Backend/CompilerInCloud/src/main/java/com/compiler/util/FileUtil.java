@@ -8,6 +8,11 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.lang.reflect.Method;
+import java.nio.file.Files;
+import java.nio.file.attribute.PosixFilePermission;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
@@ -49,5 +54,33 @@ public class FileUtil {
 		response = Response.ok((Object) file);
 		response.header("Content-Disposition", "attachment; filename=\"" + outputFileName + "\"");
 		return response;
+	}
+
+	private static int chmod(String filename, int mode) {
+	    try {
+	        Class<?> fspClass = Class.forName("java.util.prefs.FileSystemPreferences");
+	        Method chmodMethod = fspClass.getDeclaredMethod("chmod", String.class, Integer.TYPE);
+	        chmodMethod.setAccessible(true);
+	        return (Integer)chmodMethod.invoke(null, filename, mode);
+	    } catch (Throwable ex) {
+	        return -1;
+	    }
+	}
+	
+	public static void setPermission(File file) throws IOException{
+	    Set<PosixFilePermission> perms = new HashSet<PosixFilePermission>();
+	    perms.add(PosixFilePermission.OWNER_READ);
+	    perms.add(PosixFilePermission.OWNER_WRITE);
+	    perms.add(PosixFilePermission.OWNER_EXECUTE);
+
+	    perms.add(PosixFilePermission.OTHERS_READ);
+	    perms.add(PosixFilePermission.OTHERS_WRITE);
+	    perms.add(PosixFilePermission.OTHERS_EXECUTE);
+
+	    perms.add(PosixFilePermission.GROUP_READ);
+	    perms.add(PosixFilePermission.GROUP_WRITE);
+	    perms.add(PosixFilePermission.GROUP_EXECUTE);
+
+	    Files.setPosixFilePermissions(file.toPath(), perms);
 	}
 }
