@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<system>
+   <peripheral name="led" type="gpio">
+    <mem_addr_low>0</mem_addr_low>
+    <mem_addr_high>3</mem_addr_high>
+   </peripheral>
+   <peripheral name="sw" type="gpio">
+    <mem_addr_low>4</mem_addr_low>
+    <mem_addr_high>7</mem_addr_high>
+   </peripheral>
+</system>
