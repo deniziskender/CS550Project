@@ -1,6 +1,7 @@
 package com.compiler.model;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -18,6 +19,8 @@ public class Compilation implements Serializable {
 	private String encryptedCCode;
 	private String fileName;
 	private int userId;
+	private int isNewCompilation;
+	private Date createDate;
 
 	@Id
 	@Column(name = "Id")
@@ -28,6 +31,7 @@ public class Compilation implements Serializable {
 	public void setId(int id) {
 		this.id = id;
 	}
+
 	@Column(name = "Encrypted_C_Code")
 	public String getEncryptedCCode() {
 		return encryptedCCode;
@@ -54,4 +58,23 @@ public class Compilation implements Serializable {
 	public void setUserId(int userId) {
 		this.userId = userId;
 	}
+
+	@Column(name = "Is_New_Compilation")
+	public int getIsNewCompilation() {
+		return isNewCompilation;
+	}
+
+	public void setIsNewCompilation(int isNewCompilation) {
+		this.isNewCompilation = isNewCompilation;
+	}
+
+	@Column(name = "Create_Date")
+	public Date getCreateDate() {
+		return createDate;
+	}
+
+	public void setCreateDate(Date createDate) {
+		this.createDate = createDate;
+	}
+
 }

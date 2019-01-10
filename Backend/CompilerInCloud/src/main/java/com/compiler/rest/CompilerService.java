@@ -1,6 +1,7 @@
 package com.compiler.rest;
 
 import java.io.File;
+import java.util.ArrayList;
 
 import javax.ws.rs.FormParam;
 import javax.ws.rs.POST;
@@ -8,6 +9,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.io.FileUtils;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
@@ -15,7 +17,6 @@ import org.hibernate.Session;
 
 import com.compiler.constants.GetQueries;
 import com.compiler.constants.Info.ErrorMessage;
-import com.compiler.constants.Info.SuccessMessage;
 import com.compiler.model.Compilation;
 import com.compiler.serviceutil.TokenService;
 import com.compiler.util.EncrypterUtil;
@@ -79,18 +80,33 @@ public class CompilerService {
 	}
 
 	private ResponseBuilder runCompiler(Session session, String token, String cCode, String command) {
+		ResponseBuilder response = null;
 		// encrypt the c code
 		String encryptedCCode = EncrypterUtil.encrypt(cCode);
 		// get compilation from the db
 		Query query = session.createQuery(GetQueries.getCompilationByKey);
 		query.setParameter("encryptedCCode", encryptedCCode);
-		Compilation compilation = (Compilation) query.uniqueResult();
-		// already compiled so do not compile get the compilation
-		ResponseBuilder response = null;
-		if (compilation != null) {
-			// File testAsm = new File(compilation.getFileName());
-			// response = Response.ok((Object) testAsm);
-			response = Response.ok((Object) SuccessMessage.ALREADY_COMPILED_THIS_CODE.getMessage());
+		ArrayList<Compilation> compilations = (ArrayList<Compilation>) query.list();
+		// if anyone already compiled this code so do not compile get the compilation
+		if(CollectionUtils.isNotEmpty(compilations)) {
+			Compilation oneOfTheOldCompilations = compilations.get(0);
+			if (oneOfTheOldCompilations != null) {
+				// return already compiled file
+				String fileName = oneOfTheOldCompilations.getFileName();
+				File testAsm = new File(FileUtil.SERVER_UPLOAD_LOCATION_FOLDER + fileName);
+				response = Response.ok((Object) testAsm);
+				response.header("Content-Disposition", "attachment; filename=\"" + "Already_compiled_before.asm" + "\"");
+				// if this user not already compiled this file, add to this user's compilations
+				Integer userId = TokenService.getUserIdByAccessToken(session, token);
+				query = session.createQuery(GetQueries.getCompilationByKeyAndUserId);
+				query.setParameter("encryptedCCode", encryptedCCode);
+				query.setParameter("userId", userId);
+				Compilation oldCompilationOfUser = (Compilation) query.uniqueResult();
+				if(oldCompilationOfUser == null) {
+					HibernateUtil.insertCompilation(session,
+							ObjectUtil.createCompilation(encryptedCCode, fileName, userId, 0));
+				}
+			}
 		}
 		// not compiled until now so compile
 		else {
@@ -107,12 +123,9 @@ public class CompilerService {
 				}
 				String fileName = ((lastInsertedFileId + 1) + ".asm");
 				response = FileUtil.getOutput(proc, fileName);
-
 				Integer userId = TokenService.getUserIdByAccessToken(session, token);
-
 				HibernateUtil.insertCompilation(session,
-						ObjectUtil.createCompilation(encryptedCCode, fileName, userId));
-				
+						ObjectUtil.createCompilation(encryptedCCode, fileName, userId, 1));
 			} catch (Exception e) {
 				System.err.println(e.getMessage());
 				response = Response.ok((Object) ErrorMessage.NOT_OK.getMessage());

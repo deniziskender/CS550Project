@@ -1,6 +1,7 @@
 package com.compiler.dto;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 public class UserDTO implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -10,9 +11,7 @@ public class UserDTO implements Serializable {
 	private String mail;
 	private String bio;
 	private String phoneNumber;
-	private String instagramLink;
-	private String twitterLink;
-	private String linkedinLink;
+	private ArrayList<String> compilations;
 
 	public int getUserId() {
 		return userId;
@@ -62,27 +61,11 @@ public class UserDTO implements Serializable {
 		this.phoneNumber = phoneNumber;
 	}
 
-	public String getInstagramLink() {
-		return instagramLink;
+	public ArrayList<String> getCompilations() {
+		return compilations;
 	}
 
-	public void setInstagramLink(String instagramLink) {
-		this.instagramLink = instagramLink;
-	}
-
-	public String getTwitterLink() {
-		return twitterLink;
-	}
-
-	public void setTwitterLink(String twitterLink) {
-		this.twitterLink = twitterLink;
-	}
-
-	public String getLinkedinLink() {
-		return linkedinLink;
-	}
-
-	public void setLinkedinLink(String linkedinLink) {
-		this.linkedinLink = linkedinLink;
+	public void setCompilations(ArrayList<String> compilations) {
+		this.compilations = compilations;
 	}
 }

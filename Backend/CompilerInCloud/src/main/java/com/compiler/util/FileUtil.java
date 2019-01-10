@@ -18,7 +18,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
 
 public class FileUtil {
-	public static final String SERVER_UPLOAD_LOCATION_FOLDER = "/opt/tomcat/webapps/CS550Files/";
+	public static final String SERVER_UPLOAD_LOCATION_FOLDER = "/home/deniz/Desktop/CS550Files/";
 	public static ResponseBuilder getOutput(Process proc, String outputFileName) throws IOException {
 		ResponseBuilder response = null;
 

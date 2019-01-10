@@ -60,11 +60,13 @@ public class ObjectUtil {
 		return userEdition;
 	}
 
-	public static Compilation createCompilation(String key, String value, int userId) {
+	public static Compilation createCompilation(String key, String value, int userId, int isNewCompilation) {
 		Compilation model = new Compilation();
 		model.setEncryptedCCode(key);
 		model.setFileName(value);
 		model.setUserId(userId);
+		model.setIsNewCompilation(isNewCompilation);
+		model.setCreateDate(DateUtil.getCurrentDate());
 		return model;
 	}
 }

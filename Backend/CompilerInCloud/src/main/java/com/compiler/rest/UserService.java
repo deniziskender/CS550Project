@@ -24,14 +24,16 @@ import com.compiler.dto.UndetailedUserDTO;
 import com.compiler.dto.UserDTO;
 import com.compiler.dto.UserTokenDTO;
 import com.compiler.model.AccessToken;
+import com.compiler.model.Compilation;
 import com.compiler.model.RefreshToken;
 import com.compiler.model.User;
 import com.compiler.serviceutil.TokenService;
+import com.compiler.util.EncrypterUtil;
+import com.compiler.util.FileUtil;
 import com.compiler.util.HibernateUtil;
 import com.compiler.util.Mapper;
 import com.compiler.util.ObjectUtil;
 import com.compiler.util.ParameterValidationUtil;
-import com.compiler.util.EncrypterUtil;
 import com.compiler.util.RandomTokenGen;
 import com.google.gson.Gson;
 
@@ -340,12 +342,23 @@ public class UserService {
 				Query query = session.createQuery(GetQueries.getAccessTokenByText);
 				query.setParameter("text", token);
 				AccessToken accessToken = (AccessToken) query.uniqueResult();
-				// get my profile
+				// get profile
 				query = session.createQuery(GetQueries.getUserById);
 				query.setParameter("id", accessToken.getUserId());
 				User user = (User) query.uniqueResult();
 				if (user != null) {
+					ArrayList<String> compilationList = new ArrayList<String>();
+					// get user compilations
+					query = session.createQuery(GetQueries.getCompilationByUserId);
+					query.setParameter("userId", user.getId());
+					ArrayList<Compilation> compilations = (ArrayList<Compilation>) query.list();
+					if (CollectionUtils.isNotEmpty(compilations)) {
+						for (Compilation compilation : compilations) {
+							compilationList.add(FileUtil.SERVER_UPLOAD_LOCATION_FOLDER + compilation.getFileName());
+						}
+					}
 					UserDTO userDTO = Mapper.mapFromUserToUserDTO(user);
+					userDTO.setCompilations(compilationList);
 					return new Gson().toJson(userDTO);
 				}
 			} else {
