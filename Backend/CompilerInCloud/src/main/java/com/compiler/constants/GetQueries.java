@@ -14,9 +14,10 @@ public class GetQueries {
 	// compilations
 	public static final String getCompilationByKey = "from Compilation WHERE encryptedCCode = :encryptedCCode";
 	public static final String getCompilationByUserId = "from Compilation WHERE userId = :userId";
+	public static final String getCompilationByUserIdAscending = "from Compilation WHERE userId = :userId order by createDate asc";
+	public static final String getCompilationByUserIdDescending = "from Compilation WHERE userId = :userId order by createDate desc";
 	public static final String getCompilationByKeyAndUserId = "from Compilation WHERE encryptedCCode = :encryptedCCode"
 			+ " and userId = :userId";
 	public static final String getMaxFileIdFromCompilations = "select max(id) from Compilation";
-
 
 }

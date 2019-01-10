@@ -14,6 +14,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.hibernate.loader.plan.build.spi.QuerySpaceTreePrinter;
 
 import com.compiler.constants.Constants;
 import com.compiler.constants.GetQueries;
@@ -98,6 +99,8 @@ public class UserService {
 						return new Gson().toJson(ErrorMessage.USER_SUSPENDED_ACCOUNT.getMessage());
 					} else {
 						UserDTO userDTO = Mapper.mapFromUserToUserDTO(user);
+						query = session.createQuery(GetQueries.getCompilationByUserId);
+						userDTO.setCompilations(getCompilations(session, user.getId(), query));
 						return new Gson().toJson(userDTO);
 					}
 				} else {
@@ -347,18 +350,9 @@ public class UserService {
 				query.setParameter("id", accessToken.getUserId());
 				User user = (User) query.uniqueResult();
 				if (user != null) {
-					ArrayList<String> compilationList = new ArrayList<String>();
-					// get user compilations
-					query = session.createQuery(GetQueries.getCompilationByUserId);
-					query.setParameter("userId", user.getId());
-					ArrayList<Compilation> compilations = (ArrayList<Compilation>) query.list();
-					if (CollectionUtils.isNotEmpty(compilations)) {
-						for (Compilation compilation : compilations) {
-							compilationList.add(FileUtil.SERVER_UPLOAD_LOCATION_FOLDER + compilation.getFileName());
-						}
-					}
 					UserDTO userDTO = Mapper.mapFromUserToUserDTO(user);
-					userDTO.setCompilations(compilationList);
+					query = session.createQuery(GetQueries.getCompilationByUserId);
+					userDTO.setCompilations(getCompilations(session, user.getId(), query));
 					return new Gson().toJson(userDTO);
 				}
 			} else {
@@ -372,6 +366,63 @@ public class UserService {
 			}
 		}
 		return new Gson().toJson(ErrorMessage.NOT_OK);
+	}
+
+	@POST
+	@Path("/getCompilationsAscending/")
+	public String getCompilationsAscending(@FormParam("token") String token) {
+		Session session = null;
+		try {
+			session = HibernateUtil.getSessionFactory().openSession();
+			if (TokenService.isAccessTokenValid(session, token)) {
+				Query query = session.createQuery(GetQueries.getAccessTokenByText);
+				query.setParameter("text", token);
+				AccessToken accessToken = (AccessToken) query.uniqueResult();
+				query = session.createQuery(GetQueries.getCompilationByUserIdAscending);
+				return new Gson().toJson(getCompilations(session, accessToken.getUserId(), query));
+			}
+		} catch (HibernateException e) {
+			System.err.println(e.getMessage());
+		} finally {
+			if (session != null && session.isOpen()) {
+				session.close();
+			}
+		}
+		return new Gson().toJson(ErrorMessage.NOT_OK);
+	}
+
+	@POST
+	@Path("/getCompilationsDescending/")
+	public String getCompilationsDescending(@FormParam("token") String token) {
+		Session session = null;
+		try {
+			session = HibernateUtil.getSessionFactory().openSession();
+			if (TokenService.isAccessTokenValid(session, token)) {
+				Query query = session.createQuery(GetQueries.getAccessTokenByText);
+				query.setParameter("text", token);
+				AccessToken accessToken = (AccessToken) query.uniqueResult();
+				query = session.createQuery(GetQueries.getCompilationByUserIdDescending);
+				return new Gson().toJson(getCompilations(session, accessToken.getUserId(), query));
+			}
+		} catch (HibernateException e) {
+			System.err.println(e.getMessage());
+		} finally {
+			if (session != null && session.isOpen()) {
+				session.close();
+			}
+		}
+		return new Gson().toJson(ErrorMessage.NOT_OK);
+	}
+
+	public static ArrayList<Compilation> getCompilations(Session session, int userId, Query query) {
+		query.setParameter("userId", userId);
+		ArrayList<Compilation> compilations = (ArrayList<Compilation>) query.list();
+		if (CollectionUtils.isNotEmpty(compilations)) {
+			for (Compilation compilation : compilations) {
+				compilation.setFileName(FileUtil.SERVER_UPLOAD_LOCATION_FOLDER + compilation.getFileName());
+			}
+		}
+		return compilations;
 	}
 
 	@POST

@@ -3,6 +3,8 @@ package com.compiler.dto;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import com.compiler.model.Compilation;
+
 public class UserDTO implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private int userId;
@@ -11,7 +13,7 @@ public class UserDTO implements Serializable {
 	private String mail;
 	private String bio;
 	private String phoneNumber;
-	private ArrayList<String> compilations;
+	private ArrayList<Compilation> compilations;
 
 	public int getUserId() {
 		return userId;
@@ -61,11 +63,11 @@ public class UserDTO implements Serializable {
 		this.phoneNumber = phoneNumber;
 	}
 
-	public ArrayList<String> getCompilations() {
+	public ArrayList<Compilation> getCompilations() {
 		return compilations;
 	}
 
-	public void setCompilations(ArrayList<String> compilations) {
+	public void setCompilations(ArrayList<Compilation> compilations) {
 		this.compilations = compilations;
 	}
 }
