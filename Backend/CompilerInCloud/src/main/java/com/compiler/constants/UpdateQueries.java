@@ -10,8 +10,7 @@ public class UpdateQueries {
 			+ "WHERE userId  = :userId";
 
 	public static final String editUser = "UPDATE User SET name =  :name , surname =  :surname , mail =  :mail ,"
-			+ "password =  :password , bio =  :bio , phoneNumber =  :phoneNumber , instagramLink =  :instagramLink , "
-			+ "twitterLink =  :twitterLink , linkedinLink =  :linkedinLink WHERE id  = :id";
+			+ "password =  :password , bio =  :bio , phoneNumber =  :phoneNumber WHERE id  = :id";
 
 	public static final String suspendUser = "UPDATE User SET isSuspended =  :isSuspended WHERE id  = :id";
 

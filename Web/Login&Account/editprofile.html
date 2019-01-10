@@ -29,16 +29,13 @@ function validateForm() {
     }
 }
 </script>
-<form name="data" action="http://localhost:8080/CS550/rest/users/editProfile" onsubmit="return validateForm()" method="post"
+<form name="data" action="http://167.99.209.254:8080/CS550/rest/users/editProfile" onsubmit="return validateForm()" method="post"
 <p>Name : <input type="text" name="name" /></p>
 <p>Surname : <input type="text" name="surname" /></p>
 <p>University e-mail : <input type="text" name="mail" /></p>
 <p>Password : <input type="text" name="password" /></p>
 <p>Bio : <input type="text" name="bio" /></p>
 <p>Phone Number : <input type="text" name="phoneNumber" /></p>
-<p>Instagram Link : <input type="text" name="instagramLink" /></p>
-<p>Twitter Link : <input type="text" name="twitterLink" /></p>
-<p>Linkedin Link : <input type="text" name="linkedinLink" /></p>
 <p>Token : <input type="text" name="token" /></p>
 <input type="submit" value="Edit Profile" />
 </form>

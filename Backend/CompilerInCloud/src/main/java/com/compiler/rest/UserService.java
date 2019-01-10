@@ -213,9 +213,7 @@ public class UserService {
 	@Path("/editProfile/")
 	public String editProfile(@FormParam("name") String name, @FormParam("surname") String surname,
 			@FormParam("mail") String mail, @FormParam("password") String password, @FormParam("bio") String bio,
-			@FormParam("phoneNumber") String phoneNumber, @FormParam("instagramLink") String instagramLink,
-			@FormParam("twitterLink") String twitterLink, @FormParam("linkedinLink") String linkedinLink,
-			@FormParam("token") String token) {
+			@FormParam("phoneNumber") String phoneNumber, @FormParam("token") String token) {
 		if (!ParameterValidationUtil.isMailAddressFormatted(mail)) {
 			return new Gson().toJson(ErrorMessage.E_MAIL_FORMAT_ERROR.getMessage());
 		} else if (StringUtils.isBlank(password)) {
@@ -237,9 +235,6 @@ public class UserService {
 				query.setParameter("password", encryptedPassword);
 				query.setParameter("bio", bio);
 				query.setParameter("phoneNumber", phoneNumber);
-				query.setParameter("instagramLink", instagramLink);
-				query.setParameter("twitterLink", twitterLink);
-				query.setParameter("linkedinLink", linkedinLink);
 
 				Integer userId = TokenService.getUserIdByAccessToken(session, token);
 				query.setParameter("id", userId);
