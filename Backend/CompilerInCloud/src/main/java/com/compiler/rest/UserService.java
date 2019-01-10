@@ -414,7 +414,7 @@ public class UserService {
 		ArrayList<Compilation> compilations = (ArrayList<Compilation>) query.list();
 		if (CollectionUtils.isNotEmpty(compilations)) {
 			for (Compilation compilation : compilations) {
-				compilation.setFileName(FileUtil.SERVER_UPLOAD_LOCATION_FOLDER + compilation.getFileName());
+				compilation.setFileName(FileUtil.SERVER_IP + FileUtil.SERVER_GET_LOCATION_FOLDER + compilation.getFileName());
 			}
 		}
 		return compilations;
